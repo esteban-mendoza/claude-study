@@ -3,8 +3,8 @@
 ## CORE
 
 1. [x] Claude Code 101            → breadth: CLAUDE.md, plan mode, context mgmt, code review
-2. [ ] Claude Code in Action      → depth: hooks + SDK, custom commands, controlling context
-3. [ ] Introduction to subagents  → Domain 1 (27%) depth + context isolation
+2. [x] Claude Code in Action      → depth: hooks + SDK, custom commands, controlling context
+3. [x] Introduction to subagents  → Domain 1 (27%) depth + context isolation
 4. [ ] Introduction to agent skills → Domain 3 skill frontmatter + "which feature when"
 5. [ ] Building with the API      → (in progress) Domains 2, 4
 
