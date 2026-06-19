@@ -1,0 +1,32 @@
+[
+  {
+    "output": "\nimport re\n\ndef validate_s3_bucket_name(bucket_name):\n    if not isinstance(bucket_name, str):\n        return False\n    \n    if len(bucket_name) < 3 or len(bucket_name) > 63:\n        return False\n    \n    if not re.match(r'^[a-z0-9][a-z0-9\\-]*[a-z0-9]$|^[a-z0-9]$', bucket_name):\n        return False\n    \n    if '--' in bucket_name:\n        return False\n    \n    return True\n\n\ndef validate_s3_bucket_name_regex(bucket_name):\n    pattern = r'^[a-z0-9]([a-z0-9\\-]{1,61}[a-z0-9])?$'\n    return bool(re.match(pattern, bucket_name))\n",
+    "test_case": {
+      "task": "Create a function that validates AWS S3 bucket names according to AWS naming rules (3-63 characters, lowercase letters, numbers, hyphens, must start and end with letter or number)",
+      "format": "python",
+      "solution_criteria": "A function that returns True for valid bucket names and False for invalid ones. Should handle edge cases like consecutive hyphens, uppercase letters, and names shorter than 3 or longer than 63 characters."
+    },
+    "score": 8.5,
+    "reasoning": "The second `validate_s3_bucket_name_regex` function is the superior solution - its pattern `^[a-z0-9]([a-z0-9\\-]{1,61}[a-z0-9])?$` elegantly enforces all rules: starts with alphanumeric (first class), middle allows 1-61 chars of alphanumerics/hyphens, ends with alphanumeric (second class), and the structure inherently prevents consecutive hyphens and handles the 3-char minimum case. However, the first function adds unnecessary complexity with the `--` check (already prevented by the regex) and lacks the type checking from function one. Ideally, the second function should be the sole implementation, possibly with type checking added and clear documentation."
+  },
+  {
+    "output": "\n^arn:aws:iam::\\d{12}:role/[\\w+=,.@-]+$\n",
+    "test_case": {
+      "task": "Create a regular expression pattern that matches valid AWS IAM role ARNs (format: arn:aws:iam::account-id:role/role-name)",
+      "format": "regex",
+      "solution_criteria": "A regex pattern that correctly matches ARNs with valid account IDs (12 digits) and role names containing alphanumeric characters, hyphens, and underscores. Should not match malformed ARNs."
+    },
+    "score": 8.5,
+    "reasoning": "The pattern successfully matches the basic ARN structure and correctly validates the 12-digit account ID. However, it over-permits characters in the role-name portion by including symbols like '+', '=', and '@' that violate AWS IAM naming conventions. While the core requirement is met, the solution is slightly too permissive and could validate malformed role names that AWS would reject."
+  },
+  {
+    "output": "\n{\n  \"FunctionName\": \"my-lambda-function\",\n  \"Runtime\": \"python3.11\",\n  \"Role\": \"arn:aws:iam::123456789012:role/lambda-execution-role\",\n  \"Handler\": \"index.handler\",\n  \"Timeout\": 300,\n  \"MemorySize\": 512,\n  \"Environment\": {\n    \"Variables\": {\n      \"DB_HOST\": \"db.example.com\",\n      \"DB_PORT\": \"5432\",\n      \"DB_NAME\": \"mydatabase\",\n      \"API_KEY\": \"secure-api-key\",\n      \"LOG_LEVEL\": \"INFO\",\n      \"ENVIRONMENT\": \"production\"\n    }\n  },\n  \"VpcConfig\": {\n    \"SubnetIds\": [\n      \"subnet-12345678\",\n      \"subnet-87654321\"\n    ],\n    \"SecurityGroupIds\": [\n      \"sg-12345678\"\n    ]\n  },\n  \"EphemeralStorage\": {\n    \"Size\": 512\n  },\n  \"Layers\": [\n    \"arn:aws:lambda:us-east-1:123456789012:layer:my-layer:1\"\n  ],\n  \"TracingConfig\": {\n    \"Mode\": \"Active\"\n  },\n  \"Tags\": {\n    \"Environment\": \"production\",\n    \"Project\": \"my-project\",\n    \"Owner\": \"engineering-team\"\n  }\n}\n",
+    "test_case": {
+      "task": "Create a JSON configuration object for an AWS Lambda function that includes environment variables, timeout settings, memory allocation, and VPC configuration",
+      "format": "json",
+      "solution_criteria": "A valid JSON structure with appropriate AWS Lambda configuration keys, realistic values for timeout (15-900 seconds) and memory (128-10240 MB), and proper nested structure for VPC settings including SubnetIds and SecurityGroupIds."
+    },
+    "score": 8.5,
+    "reasoning": "The solution meets the core criteria with valid JSON structure, appropriate timeout/memory values, and proper VPC configuration. However, it introduces a significant security vulnerability by storing API credentials in plain text, which violates AWS best practices. The configuration is otherwise well-structured and includes thoughtful additions like tracing and tags, but lacks security guidance and some optional but useful configuration parameters."
+  }
+]
